@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todoey_app/models/task_data.dart';
+import 'package:provider/provider.dart';
 
 class AddTaskScreen extends StatelessWidget {
-
-  final Function addTaskCallback;
-  late String newTaskTitle;
-  
-  AddTaskScreen(this.addTaskCallback);
-
+   TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +32,16 @@ class AddTaskScreen extends StatelessWidget {
             TextField(
               autofocus: true,
               textAlign: TextAlign.center,
-              onChanged: (newText){
-                newTaskTitle = newText;
-              },
+              controller: textEditingController,
             ),
             ElevatedButton(
               onPressed: () {
-                addTaskCallback(newTaskTitle);
+                String newTaskTitle = textEditingController.text;
+                 if (newTaskTitle.isNotEmpty) {
+                  Provider.of<TaskData>(context, listen: false).addTask(newTaskTitle);
+                  Navigator.pop(context);
+                }
+                // else trigger error 
               },
               child: const Text(
                 'Add',
